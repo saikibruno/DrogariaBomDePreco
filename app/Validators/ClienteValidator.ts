@@ -12,16 +12,17 @@ export default class ClienteValidator {
       rules.maxLength(11),
       rules.minLength(11),
       rules.unique({ table: 'clientes', column: 'cpf' }),
-      rules.regex(/([0-9]{11})/)
+      rules.regex(new RegExp('^[0-9]*$')),
     ]),
     telefone: schema.string([
       rules.maxLength(11),
       rules.minLength(11),
-      rules.regex(/([0-9]{11})/)
+      rules.regex(new RegExp('^[0-9]*$')),
     ]),
     email: schema.string([
       rules.maxLength(100),
-      rules.unique({ table: 'clientes', column: 'email' })
+      rules.unique({ table: 'clientes', column: 'email' }),
+      rules.email()
     ]),
     cep: schema.string([
       rules.maxLength(8),

@@ -6,7 +6,7 @@ import ClienteValidator from "App/Validators/ClienteValidator"
 
 export default class ClientesController {
     index() {
-        return Cliente.query().preload('venda').paginate(1,50)
+        return Cliente.query().preload('venda').paginate(1, 50)
     }
 
     async store({ request }) {
@@ -15,9 +15,10 @@ export default class ClientesController {
         return Cliente.create(dados)
     }
 
-    show({ request }) {
-        const id = request.param('id')
-        return Cliente.findOrFail(id)
+    async show({ request }) {
+        const id = await request.param('id')
+
+        return await Cliente.query().where('id', id).preload('venda').firstOrFail()
     }
 
     async destroy({ request }) {

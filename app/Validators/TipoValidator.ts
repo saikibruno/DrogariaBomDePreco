@@ -12,6 +12,6 @@ export default class TipoValidator {
 
   public messages: CustomMessages = {
     required: 'O campo {{field}} é obrigatório.',
-    maxLength: 'Número máximo de caracteres atingido.',
+    maxLength: 'Número máximo de caracteres atingido. O {{field}} deve conter {{ options.maxLength }}',
   }
 }

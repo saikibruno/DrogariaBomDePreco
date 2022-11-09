@@ -11,17 +11,23 @@ export default class FuncionarioValidator {
     cpf: schema.string([
       rules.maxLength(11),
       rules.minLength(11),
+      rules.regex(new RegExp('^[0-9]*$')),
+      rules.unique({ table: 'funcionarios', column: 'cpf' })
     ]),
     telefone: schema.string([
       rules.maxLength(11),
       rules.minLength(11),
+      rules.regex(new RegExp('^[0-9]*$'))
     ]),
     email: schema.string([
       rules.maxLength(100),
+      rules.unique({ table: 'funcionarios', column: 'email' }),
+      rules.email()
     ]),
     cep: schema.string.optional([
       rules.maxLength(8),
       rules.minLength(8),
+      rules.regex(new RegExp('^[0-9]*$'))
     ]),
     endereco: schema.string.optional([
       rules.maxLength(100),
@@ -31,12 +37,16 @@ export default class FuncionarioValidator {
     ]),
     numero: schema.string.optional([
       rules.maxLength(100),
+      rules.regex(new RegExp('^[0-9]*$'))
     ]),
   })
 
   public messages: CustomMessages = {
     required: 'O campo {{field}} é obrigatório.',
-    maxLength: 'Número máximo de caracteres atingido.',
-    minLength: 'Número mínimo de caracteres não atingido.',
+    maxLength: 'Número máximo de caracteres atingido. O {{field}} deve conter {{ options.maxLength }}',
+    minLength: 'Número mínimo de caracteres não atingido. O {{field}} deve conter {{ options.minLength }}',
+    regex: 'O campo {{field}} deve conter apenas números.',
+    unique: 'O {{field}} já cadastrado.',
+    email:'O {{field}} está fora do padrão.'
   }
 }

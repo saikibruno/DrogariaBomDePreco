@@ -6,7 +6,7 @@ import FornecedorValidator from "App/Validators/FornecedorValidator"
 
 export default class FornecedorsController {
     index() {
-        return Fornecedor.query().preload('produto').paginate(1,50)
+        return Fornecedor.query().preload('produto').paginate(1, 50)
     }
 
     async store({ request }) {
@@ -15,9 +15,10 @@ export default class FornecedorsController {
         return Fornecedor.create(dados)
     }
 
-    show({ request }) {
-        const id = request.param('id')
-        return Fornecedor.findOrFail(id)
+    async show({ request }) {
+        const id = await request.param('id')
+
+        return await Fornecedor.query().where('id', id).preload('produto').firstOrFail()
     }
 
     async destroy({ request }) {

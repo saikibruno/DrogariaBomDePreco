@@ -32,19 +32,15 @@ Route.get('/', async () => {
   }
 })
 
-
-
-Route.resource('/funcionarios', 'FuncionariosController').apiOnly()
-Route.resource('/produtos', 'ProdutosController').apiOnly()
-Route.resource('/tipos', 'TiposController').apiOnly()
-Route.resource('/vendas', 'VendasController').apiOnly()
-Route.resource('/venda_produtos', 'VendaProdutosController').apiOnly()
-
 Route.post('/users', 'UsersController.store')
-
 Route.post('/login', 'UsersController.login')
 
 Route.group(() => {
   Route.resource('/clientes', 'ClientesController').apiOnly()
   Route.resource('/fornecedor', 'FornecedorsController').apiOnly()
+  Route.resource('/funcionarios', 'FuncionariosController').apiOnly()
+  Route.resource('/produtos', 'ProdutosController').apiOnly()
+  Route.resource('/tipos', 'TiposController').apiOnly()
+  Route.resource('/vendas', 'VendasController').apiOnly()
+  Route.resource('/venda_produtos', 'VendaProdutosController').apiOnly()
 }).middleware('auth')

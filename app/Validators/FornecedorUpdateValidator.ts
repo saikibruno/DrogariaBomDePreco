@@ -13,21 +13,22 @@ export default class FornecedorUpdateValidator {
       rules.minLength(14),
       rules.exists({ table: 'fornecedors', column: 'cnpj' }),
       rules.unique({ table: 'fornecedors', column: 'cnpj' }),
-      rules.regex(/([0-9]{11})/)
+      rules.regex(new RegExp('^[0-9]*$')),
     ]),
     telefone: schema.string([
       rules.maxLength(11),
       rules.minLength(11),
-      rules.regex(/([0-9]{11})/)
+      rules.regex(new RegExp('^[0-9]*$')),
     ]),
     email: schema.string.optional([
       rules.maxLength(100),
       rules.unique({ table: 'fornecedors', column: 'email' }),
+      rules.email()
     ]),
     cep: schema.string([
       rules.maxLength(8),
       rules.minLength(8),
-      rules.regex(/([0-9]{8})/)
+      rules.regex(new RegExp('^[0-9]*$')),
     ]),
     endereco: schema.string.optional([
       rules.maxLength(100),

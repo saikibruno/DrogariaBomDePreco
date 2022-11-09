@@ -17,6 +17,7 @@ export default class VendaValidator {
 
   public messages: CustomMessages = {
     required: 'O campo {{field}} é obrigatório.',
-    exists: 'Não existe esse ID na tabela.'
+    exists: 'Não existe esse ID na tabela.',
+    number: 'O campo {{field}} é composto apenas por números'
   }
 }

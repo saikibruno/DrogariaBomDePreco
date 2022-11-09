@@ -16,7 +16,8 @@ export default class ProdutoValidator {
     valorAtual: schema.number(),
 
     codigoBarra: schema.string([
-      rules.maxLength(100)
+      rules.maxLength(100),
+      rules.regex(new RegExp('^[0-9]*$')),
     ]),
 
     fornecedorId: schema.number([
@@ -30,8 +31,9 @@ export default class ProdutoValidator {
 
   public messages: CustomMessages = {
     required: 'O campo {{field}} é obrigatório.',
-    maxLength: 'Número máximo de caracteres atingido.',
-    minLength: 'Número mínimo de caracteres não atingido.',
-    exists: 'Não existe esse ID na tabela.'
+    maxLength: 'Número máximo de caracteres atingido. O {{field}} deve conter {{ options.maxLength }}',
+    exists: 'Não existe esse ID na tabela.',
+    regex: 'O campo {{field}} deve conter apenas números.',
+    number: 'O campo {{field}} é composto apenas por números'
   }
 }
