@@ -5,7 +5,7 @@ import VendaProdutoValidator from "App/Validators/VendaProdutoValidator"
 
 export default class VendaProdutosController {
     index() {
-        return VendaProduto.query().paginate(1, 50)
+        return VendaProduto.query().preload('venda').paginate(1, 50)
     }
 
     async store({ request }) {
@@ -17,7 +17,12 @@ export default class VendaProdutosController {
     async show({ request }) {
         const id = await request.param('id')
 
-        return await VendaProduto.query().where('id', id).firstOrFail()
+        
+        return await VendaProduto
+            .query()
+            .where('id', id)     
+            .preload('venda')
+            .firstOrFail()
     }
 
     async destroy({ request }) {

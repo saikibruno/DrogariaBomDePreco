@@ -1,8 +1,9 @@
 import { DateTime } from 'luxon'
-import { BaseModel, BelongsTo, belongsTo, column, ManyToMany, manyToMany } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, BelongsTo, belongsTo, column, HasMany, hasMany, ManyToMany, manyToMany } from '@ioc:Adonis/Lucid/Orm'
 import Cliente from './Cliente'
 import Funcionario from './Funcionario'
 import Produto from './Produto'
+import VendaProduto from './VendaProduto'
 
 export default class Venda extends BaseModel {
   @column({ isPrimary: true })
@@ -28,6 +29,9 @@ export default class Venda extends BaseModel {
   
   @belongsTo(() => Funcionario)
   public funcionario: BelongsTo<typeof Funcionario>
+  
+  @hasMany(() => VendaProduto)
+  public vendaProduto: HasMany<typeof VendaProduto>
 
   @manyToMany(()=>Produto,{
     pivotTable:'venda_produtos'

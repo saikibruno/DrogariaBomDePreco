@@ -5,7 +5,7 @@ import VendaValidator from "App/Validators/VendaValidator"
 
 export default class VendasController {
     index() {
-        return Venda.query().preload('cliente').preload('funcionario').preload('produtos').paginate(1, 50)
+        return Venda.query().preload('cliente').preload('funcionario').preload('produtos').preload('vendaProduto').paginate(1, 50)
     }
 
     async store({ request }) {
@@ -23,6 +23,7 @@ export default class VendasController {
             .preload('cliente')
             .preload('funcionario')
             .preload('produtos')
+            .preload('vendaProduto')
             .firstOrFail()
     }
 
