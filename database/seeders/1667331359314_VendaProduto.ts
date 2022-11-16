@@ -12,13 +12,13 @@ export default class extends BaseSeeder {
       },
       {
         vendaId:1,
-        produtoId:1,
+        produtoId:2,
         quantidade:2,
         valor:10.80
       },
       {
         vendaId:1,
-        produtoId:1,
+        produtoId:3,
         quantidade:1,
         valor:10.80
       },

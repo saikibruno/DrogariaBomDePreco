@@ -4,8 +4,29 @@ import Venda from "App/Models/Venda"
 import VendaValidator from "App/Validators/VendaValidator"
 
 export default class VendasController {
-    index() {
-        return Venda.query().preload('cliente').preload('funcionario').preload('produtos').preload('vendaProduto').paginate(1, 50)
+    async index({ request }) {
+        let { funcionarioId, clienteId, page } = request.all()
+
+        page = page ? page : 1
+        const primeiraPagina = 1
+        const quantidadePorPagina = 10
+
+        const venda = Venda
+            .query()
+            .preload('cliente')
+            .preload('funcionario')
+            .preload('produtos', (produtosPreload => {
+                produtosPreload.preload('tipo').preload('fornecedor')
+            }))
+            .preload('vendaProduto')
+
+        if (funcionarioId) {
+            return await venda.where('funcionarioId', funcionarioId).paginate(page ? page : primeiraPagina, quantidadePorPagina)
+        } else if (clienteId) {
+            return await venda.where('clienteId', clienteId).paginate(page ? page : primeiraPagina, quantidadePorPagina)
+        } else {
+            return await venda.paginate(page ? page : primeiraPagina, quantidadePorPagina)
+        }
     }
 
     async store({ request }) {
@@ -22,7 +43,9 @@ export default class VendasController {
             .where('id', id)
             .preload('cliente')
             .preload('funcionario')
-            .preload('produtos')
+            .preload('produtos', (produtosPreload => {
+                produtosPreload.preload('tipo').preload('fornecedor')
+            }))
             .preload('vendaProduto')
             .firstOrFail()
     }

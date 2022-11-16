@@ -8,9 +8,6 @@ import VendaProduto from './VendaProduto'
 export default class Venda extends BaseModel {
   @column({ isPrimary: true })
   public id: number
-
-  @column()
-  public quantidade:number
   
   @column()
   public funcionarioId:number

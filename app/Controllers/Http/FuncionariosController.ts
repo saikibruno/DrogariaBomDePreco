@@ -5,8 +5,44 @@ import FuncionarioUpdateValidator from "App/Validators/FuncionarioUpdateValidato
 import FuncionarioValidator from "App/Validators/FuncionarioValidator"
 
 export default class FuncionariosController {
-    index() {
-        return Funcionario.query().preload('venda').paginate(1, 50)
+    async index({ request }) {
+        let { nome, cpf, telefone, email, cep, endereco, complemento, numero, page } = request.all()
+
+        page = page ? page : 1
+        const primeiraPagina = 1
+        const quantidadePorPagina = 10
+
+        const funcionario = Funcionario
+            .query()
+            .preload('venda', (vendaPreload => {
+                vendaPreload                    
+                    .preload('produtos', (produtoPreload => {
+                        produtoPreload.preload('tipo').preload('fornecedor')
+                    }))
+                    .preload('cliente')
+                    .preload('vendaProduto')
+            }))
+
+        if (nome) {
+            return await funcionario.where('nome', nome).paginate(page ? page : primeiraPagina, quantidadePorPagina)
+        } else if (cpf) {
+            return await funcionario.where('cpf', cpf).paginate(page ? page : primeiraPagina, quantidadePorPagina)
+        } else if (telefone) {
+            return await funcionario.where('telefone', telefone).paginate(page ? page : primeiraPagina, quantidadePorPagina)
+        } else if (email) {
+            return await funcionario.where('email', email).paginate(page ? page : primeiraPagina, quantidadePorPagina)
+        } else if (cep) {
+            return await funcionario.where('cep', cep).paginate(page ? page : primeiraPagina, quantidadePorPagina)
+        } else if (endereco) {
+            return await funcionario.where('endereco', endereco).paginate(page ? page : primeiraPagina, quantidadePorPagina)
+        } else if (complemento) {
+            return await funcionario.where('complemento', complemento).paginate(page ? page : primeiraPagina, quantidadePorPagina)
+        } else if (numero) {
+            return await funcionario.where('numero', numero).paginate(page ? page : primeiraPagina, quantidadePorPagina)
+        } else {
+            return await funcionario.paginate(page ? page : primeiraPagina, quantidadePorPagina)
+        }
+
     }
 
     async store({ request }) {
@@ -18,7 +54,14 @@ export default class FuncionariosController {
     async show({ request }) {
         const id = await request.param('id')
 
-        return await Funcionario.query().where('id', id).preload('venda').firstOrFail()
+        return await Funcionario.query().where('id', id).preload('venda', (vendaPreload => {
+            vendaPreload                    
+                .preload('produtos', (produtoPreload => {
+                    produtoPreload.preload('tipo').preload('fornecedor')
+                }))
+                .preload('cliente')
+                .preload('vendaProduto')
+        })).firstOrFail()
     }
 
     async destroy({ request }) {

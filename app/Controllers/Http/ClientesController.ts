@@ -5,8 +5,41 @@ import ClienteUpdateValidator from "App/Validators/ClienteUpdateValidator"
 import ClienteValidator from "App/Validators/ClienteValidator"
 
 export default class ClientesController {
-    index() {
-        return Cliente.query().preload('venda').paginate(1, 50)
+    async index({ request }) {
+        let { nome, cpf, telefone, email, cep, endereco, complemento, numero, page } = request.all()
+
+        page = page ? page : 1
+        const primeiraPagina = 1
+        const quantidadePorPagina = 10
+
+        const cliente = Cliente
+            .query()
+            .preload('venda', (vendaPreload => {
+                vendaPreload
+                    .preload('funcionario')
+                    .preload('produtos')
+            }))
+
+        if (nome) {
+            return await cliente.where('nome', nome).paginate(page ? page : primeiraPagina, quantidadePorPagina)
+        } else if (cpf) {
+            return await cliente.where('cpf', cpf).paginate(page ? page : primeiraPagina, quantidadePorPagina)
+        } else if (telefone) {
+            return await cliente.where('telefone', telefone).paginate(page ? page : primeiraPagina, quantidadePorPagina)
+        } else if (email) {
+            return await cliente.where('email', email).paginate(page ? page : primeiraPagina, quantidadePorPagina)
+        } else if (cep) {
+            return await cliente.where('cep', cep).paginate(page ? page : primeiraPagina, quantidadePorPagina)
+        } else if (endereco) {
+            return await cliente.where('endereco', endereco).paginate(page ? page : primeiraPagina, quantidadePorPagina)
+        } else if (complemento) {
+            return await cliente.where('complemento', complemento).paginate(page ? page : primeiraPagina, quantidadePorPagina)
+        } else if (numero) {
+            return await cliente.where('numero', numero).paginate(page ? page : primeiraPagina, quantidadePorPagina)
+        } else {
+            return await cliente.paginate(page ? page : primeiraPagina, quantidadePorPagina)
+        }
+
     }
 
     async store({ request }) {
@@ -16,9 +49,19 @@ export default class ClientesController {
     }
 
     async show({ request }) {
-        const id = await request.param('id')
+        const id = await request.param('id')                
 
-        return await Cliente.query().where('id', id).preload('venda').firstOrFail()
+        return await Cliente
+            .query()
+            .where('id', id)
+            .preload('venda', (vendaPreload => {
+                vendaPreload
+                    .preload('funcionario')
+                    .preload('produtos', (vendaProdutosPreload => {
+                        vendaProdutosPreload.preload('tipo').preload('fornecedor')
+                    }))
+            }))
+            .firstOrFail()
     }
 
     async destroy({ request }) {
